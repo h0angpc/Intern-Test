@@ -74,12 +74,12 @@ fun MainScreen(){
                     {
                         CurrencyRow(
                             modifier = Modifier.fillMaxWidth(),
-                            currencyCode = "VND",
-                            currencyName = "Viet Nam Dong",
+                            currencyCode = "USD",
+                            currencyName = "US Dollar",
                             onDropDownIconClicked = {}
                         )
                         Text(
-                            text = "20000",
+                            text = "20",
                             fontSize = 40.sp
                         )
                     }
@@ -96,13 +96,13 @@ fun MainScreen(){
                     )
                     {
                         Text(
-                            text = "20000",
+                            text = "20",
                             fontSize = 40.sp
                         )
                         CurrencyRow(
                             modifier = Modifier.fillMaxWidth(),
-                            currencyCode = "VND",
-                            currencyName = "Viet Nam Dong",
+                            currencyCode = "USD",
+                            currencyName = "US Dollar",
                             onDropDownIconClicked = {}
                         )
                     }
