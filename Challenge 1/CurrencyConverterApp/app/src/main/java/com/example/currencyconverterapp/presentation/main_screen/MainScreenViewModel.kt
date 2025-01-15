@@ -8,20 +8,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverterapp.domain.model.Resource
 import com.example.currencyconverterapp.domain.repository.CurrencyRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainScreenViewModel(
+@HiltViewModel
+class MainScreenViewModel @Inject constructor(
     private val repository: CurrencyRepository
 ): ViewModel() {
+
     var state by mutableStateOf(MainScreenState())
 
     init {
         getCurrencyRatesList()
     }
 
-    fun onEvent(event: MainScreenEvent){
-        when(event){
+    fun onEvent(event: MainScreenEvent) {
+        when(event) {
             MainScreenEvent.FromCurrencySelect -> {
                 state = state.copy(selection = SelectionState.FROM)
             }
@@ -39,7 +43,14 @@ class MainScreenViewModel(
             is MainScreenEvent.NumberButtonClicked -> {
                 updateCurrencyValue(value = event.value)
             }
-            is MainScreenEvent.BottomSheetItemClicked -> TODO()
+            is MainScreenEvent.BottomSheetItemClicked -> {
+                if (state.selection == SelectionState.FROM) {
+                    state = state.copy(fromCurrencyCode = event.value)
+                } else if (state.selection == SelectionState.TO) {
+                    state = state.copy(toCurrencyCode = event.value)
+                }
+                updateCurrencyValue("")
+            }
         }
     }
 
@@ -67,14 +78,14 @@ class MainScreenViewModel(
         }
     }
 
-    private fun updateCurrencyValue(value: String){
+    private fun updateCurrencyValue(value: String) {
+
         val currentCurrencyValue = when(state.selection) {
             SelectionState.FROM -> state.fromCurrencyValue
-            SelectionState.TO ->state.toCurrencyValue
+            SelectionState.TO -> state.toCurrencyValue
         }
-
-        val fromCurrencyRate = state.currencyRates[state.fromCurrencyValue]?.rate ?: 0.0
-        val toCurrencyRate = state.currencyRates[state.toCurrencyValue]?.rate ?: 0.0
+        val fromCurrencyRate = state.currencyRates[state.fromCurrencyCode]?.rate ?: 0.0
+        val toCurrencyRate = state.currencyRates[state.toCurrencyCode]?.rate ?: 0.0
 
         val updatedCurrencyValue = when(value) {
             "C" -> "0.00"
@@ -83,9 +94,9 @@ class MainScreenViewModel(
 
         val numberFormat = DecimalFormat("#.00")
 
-        when (state.selection) {
+        when(state.selection) {
             SelectionState.FROM -> {
-                val fromValue = updatedCurrencyValue.toDoubleOrNull() ?: 0.00
+                val fromValue = updatedCurrencyValue.toDoubleOrNull() ?: 0.0
                 val toValue = fromValue / fromCurrencyRate * toCurrencyRate
                 state = state.copy(
                     fromCurrencyValue = updatedCurrencyValue,
@@ -93,11 +104,11 @@ class MainScreenViewModel(
                 )
             }
             SelectionState.TO -> {
-                val toValue = updatedCurrencyValue.toDoubleOrNull() ?: 0.00
+                val toValue = updatedCurrencyValue.toDoubleOrNull() ?: 0.0
                 val fromValue = toValue / toCurrencyRate * fromCurrencyRate
                 state = state.copy(
-                    fromCurrencyValue = updatedCurrencyValue,
-                    toCurrencyValue = numberFormat.format(fromValue)
+                    toCurrencyValue = updatedCurrencyValue,
+                    fromCurrencyValue = numberFormat.format(fromValue)
                 )
             }
         }

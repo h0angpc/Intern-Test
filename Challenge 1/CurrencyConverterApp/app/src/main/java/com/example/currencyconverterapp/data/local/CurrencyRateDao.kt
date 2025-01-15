@@ -1,16 +1,17 @@
 package com.example.currencyconverterapp.data.local
 
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Query
 import androidx.room.Upsert
 import com.example.currencyconverterapp.data.local.entity.CurrencyRateEntity
-import androidx.room.Query
-import androidx.room.Dao
 
 @Dao
 interface CurrencyRateDao {
 
     @Upsert
-    suspend fun upsertAll(currencyRateDao: List<CurrencyRateEntity>)
+    suspend fun upsertAll(currencyRates: List<CurrencyRateEntity>)
 
-    @Query("SELECT * FROM currencyrateentity")
+    @Query("SELECT * FROM currency_rate")
     suspend fun getAllCurrencyRates(): List<CurrencyRateEntity>
 }

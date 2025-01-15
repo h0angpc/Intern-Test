@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity
+@Entity(tableName = "currency_rate")
 data class CurrencyRateEntity(
     @PrimaryKey
     val code: String,

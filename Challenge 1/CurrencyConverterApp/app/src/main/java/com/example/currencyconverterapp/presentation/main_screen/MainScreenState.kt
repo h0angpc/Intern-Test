@@ -4,7 +4,7 @@ import com.example.currencyconverterapp.domain.model.CurrencyRate
 
 data class MainScreenState(
     val fromCurrencyCode: String = "USD",
-    val toCurrencyCode: String = "INR",
+    val toCurrencyCode: String = "EUR",
     val fromCurrencyValue: String = "0.00",
     val toCurrencyValue: String = "0.00",
     val selection: SelectionState = SelectionState.FROM,

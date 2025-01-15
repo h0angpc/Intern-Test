@@ -37,7 +37,7 @@ class CurrencyRepositoryImpl (
         catch (e: Exception){
             emit(
                 Resource.Error(
-                    message = "Some thing went wrong!",
+                    message = "Some thing went wrong! ${e.message}" ,
                     data = localCurrencyRates
                 )
             )
